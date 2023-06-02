@@ -15,5 +15,5 @@ pico_add_extra_outputs(servo_test)
 
 target_include_directories(servo_test INTERFACE ./)
 
-target_link_libraries(servo_test pico_stdlib hardware_pwm)
+target_link_libraries(servo_test pico_stdlib hardware_pwm hardware_adc)
 

@@ -3,6 +3,7 @@
 #include "hardware/gpio.h"
 #include "pico/binary_info.h"
 #include "hardware/pwm.h"
+#include "hardware/adc.h"
 
 const uint LED_PIN = 25;
 const uint PWM_PORT = 2;
@@ -23,8 +24,17 @@ void init(void){
     pwm_config_set_output_polarity(&config, false, false);
     pwm_config_set_wrap(&config, PWM_PERIOD);
     pwm_init(slice_num, &config, true);
+
+    adc_init();
+    adc_gpio_init(26);
+    adc_select_input(0);
 }
 
+int getDuty(){
+    const float conversion_factor = 1/(1<<12)*PWM_PERIOD;
+    uint16_t result = adc_read();
+    return result * conversion_factor;
+}
 
 int main(void){
     bi_decl(bi_program_description("This is a mosfet drive test"));
@@ -42,11 +52,16 @@ int main(void){
     
     init();
 
+    int duty=0;
     while(1){
-        pwm_set_gpio_level(PWM_PORT, (int)(PWM_PERIOD*0.2));
-        sleep_ms(1000);
-        pwm_set_gpio_level(PWM_PORT, (int)(PWM_PERIOD*0.8));
-        sleep_ms(1000);
+        pwm_set_gpio_level(PWM_PORT, (int)(0.3 * PWM_PERIOD));
+        duty = getDuty();
+
+        
+        if(duty & 0x01)
+            gpio_put(LED_PIN, 1);
+        else
+            gpio_put(LED_PIN, 0);
     }
 }
 
