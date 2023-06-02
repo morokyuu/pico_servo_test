@@ -11,6 +11,9 @@ add_executable(servo_test
     main.c
 )
 
+pico_enable_stdio_usb(servo_test 1)
+pico_enable_stdio_uart(servo_test 1)
+
 pico_add_extra_outputs(servo_test)
 
 target_include_directories(servo_test INTERFACE ./)

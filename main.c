@@ -31,9 +31,9 @@ void init(void){
 }
 
 int getDuty(){
-    const float conversion_factor = 1/(1<<12)*PWM_PERIOD;
-    uint16_t result = adc_read();
-    return result * conversion_factor;
+    uint16_t result = (uint16_t)(adc_read()/(float)(1<<12) * PWM_PERIOD);
+    printf("duty %d\n",result);
+    return result;
 }
 
 int main(void){
@@ -54,8 +54,10 @@ int main(void){
 
     int duty=0;
     while(1){
-        pwm_set_gpio_level(PWM_PORT, (int)(0.3 * PWM_PERIOD));
+        //pwm_set_gpio_level(PWM_PORT, (int)(0.3 * PWM_PERIOD));
+        pwm_set_gpio_level(PWM_PORT, duty);
         duty = getDuty();
+
 
         
         if(duty & 0x01)
