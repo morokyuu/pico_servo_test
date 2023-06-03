@@ -7,7 +7,7 @@
 
 const uint LED_PIN = 25;
 const uint PWM_PORT = 2;
-const uint PWM_PERIOD = 3300;
+const uint PWM_PERIOD = 25000;
 
 void init(void){
     uint slice_num = pwm_gpio_to_slice_num(PWM_PORT);
@@ -19,7 +19,7 @@ void init(void){
 
     pwm_config config;
     pwm_config_set_phase_correct(&config, false);
-    pwm_config_set_clkdiv_int(&config, 4);
+    pwm_config_set_clkdiv_int(&config, 100);
     pwm_config_set_clkdiv_mode(&config, PWM_DIV_FREE_RUNNING);
     pwm_config_set_output_polarity(&config, false, false);
     pwm_config_set_wrap(&config, PWM_PERIOD);
@@ -57,8 +57,6 @@ int main(void){
         //pwm_set_gpio_level(PWM_PORT, (int)(0.3 * PWM_PERIOD));
         pwm_set_gpio_level(PWM_PORT, duty);
         duty = getDuty();
-
-
         
         if(duty & 0x01)
             gpio_put(LED_PIN, 1);
