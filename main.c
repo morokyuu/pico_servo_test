@@ -36,6 +36,18 @@ int getDuty(){
     return result;
 }
 
+bool timer_callback(repeating_timer_t *rt){
+    static int led = 0;
+
+    gpio_put(LED_PIN, led);
+
+    if(led){
+        led = 0;
+    }else{
+        led = 1;
+    }
+}
+
 int main(void){
     bi_decl(bi_program_description("This is a mosfet drive test"));
     
@@ -49,6 +61,14 @@ int main(void){
     gpio_put(LED_PIN, 0);
     sleep_ms(80);
     gpio_put(LED_PIN, 1);
+
+    repeating_timer_t timer;
+    add_repeating_timer_us(-2000000, timer_callback, NULL, &timer);
+    while(1){
+
+    }
+
+
     
     init();
 
