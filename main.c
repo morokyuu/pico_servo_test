@@ -33,9 +33,8 @@ void init(void){
 int getDuty(){
     uint16_t ad = adc_read();
     const int ADRANGE = (1<<12)/2;
-    uint16_t result = PWM_PERIOD/20 * (1.5 + 0.5 * (ad - ADRANGE)/ADRANGE);
-    //uint16_t result = (uint16_t)(adc_read()/(float)(1<<12) * PWM_PERIOD);
-    printf("duty %d\n",result);
+    uint16_t result = PWM_PERIOD/20 * (1.6 + 0.85 * (ad - ADRANGE)/ADRANGE);
+    printf("ad %d, duty %d\n",ad,result);
     return result;
 }
 
