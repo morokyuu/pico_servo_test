@@ -31,7 +31,10 @@ void init(void){
 }
 
 int getDuty(){
-    uint16_t result = (uint16_t)(adc_read()/(float)(1<<12) * PWM_PERIOD);
+    uint16_t ad = adc_read();
+    const int ADRANGE = (1<<12)/2;
+    uint16_t result = PWM_PERIOD/20 * (1.5 + 0.5 * (ad - ADRANGE)/ADRANGE);
+    //uint16_t result = (uint16_t)(adc_read()/(float)(1<<12) * PWM_PERIOD);
     printf("duty %d\n",result);
     return result;
 }
@@ -62,13 +65,8 @@ int main(void){
     sleep_ms(80);
     gpio_put(LED_PIN, 1);
 
-    repeating_timer_t timer;
-    add_repeating_timer_us(-2000000, timer_callback, NULL, &timer);
-    while(1){
-
-    }
-
-
+    //repeating_timer_t timer;
+    //add_repeating_timer_us(-2000000, timer_callback, NULL, &timer);
     
     init();
 
